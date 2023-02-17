@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User= require('../models/User.model');
 const bcrypt = require('bcryptjs');
+const isLogged= require('../middleware/isLogged');
 
 /* GET home page */
 router.get("/", (req, res, next) => {
@@ -76,20 +77,8 @@ router.get('/logout', (req, res, next) => {
   })
 })
 
-router.get('/main', async (req, res, next) => {
-  if(!req.session.currentUser){
-    res.redirect('/');
-  }else {
-    res.render('main');
-  }
-})
+router.get('/main', isLogged, async (req, res, next) => { res.render('main') })
 
-router.get('/private', (req, res, next) => {
-  if(!req.session.currentUser){
-    res.render('index');
-  }else {
-    res.render('private')
-  }
-})
+router.get('/private', isLogged, (req, res, next) => { res.render('private') })
 
 module.exports = router;
